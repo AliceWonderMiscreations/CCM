@@ -1,0 +1,24 @@
+{
+    "name": "alicewondermiscreations/ccm",
+    "type": "library",
+    "description": "Utility class libraries for PHP Composer Class Manager",
+    "homepage": "https://github.com/AliceWonderMiscreations/CCM",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alice Wonder",
+            "role": "Unemployed Maniac"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "suggest": {
+        "ext-apc": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "AliceWonderMiscreations\\CCM\\": "lib/"
+        }
+    }
+}
