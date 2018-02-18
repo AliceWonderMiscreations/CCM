@@ -60,6 +60,9 @@ abstract class AutoloadPromise
     /* searches for a class within the phpinclude path */
     abstract public function localSystemClass( string $class );
     
+    /* This function must exist even if your implementation does not use caching */
+    abstract public function setCacheKey( string $string );
+    
     /* overloading */
     public function __call($name, $arguments) {
         throw new \Exception('Method ' . $name . ' is not defined in the ' . get_class($this) . ' class');

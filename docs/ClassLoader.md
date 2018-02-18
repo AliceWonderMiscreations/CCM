@@ -16,7 +16,7 @@ loading class in their auto-loader script:
 Then the auto-loader for the application will need to create an instance of the
 class:
 
-    $CCM = new \AliceWonderMiscreations\CCM\ClassLoader();
+    $CCM = new \CCM\ClassLoader();
 
 Within the `/usr/share/ccm/` root, by default the class looks for matches
 within the `local` branch first, then the `stable` branch. By default it will
@@ -107,9 +107,9 @@ If you have the PECL APCu binary module installed and enabled, you can have the
 autoloader cache the path to class files once they have been found so that the
 autoload class does not need to search for it every time a page loads.
 
-Simply call the constructor with a string argument:
+Use the `setCacheKey` method to define a string to use:
 
-    $CCM = new \AliceWonderMiscreations\CCM\ClassLoader('Some String Here');
+    $CCM->setCacheKey('Some String Here');
 
 The string should be unique to your web application, or at least unique to the
 order you want the class to search through branches, so that if one web

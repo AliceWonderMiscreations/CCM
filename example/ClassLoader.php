@@ -97,7 +97,7 @@ class ClassLoader extends \AliceWonderMiscreations\CCM\AutoloadPromise
     }
   
     /* takes an array of files to be loaded and attempts to load them */
-    public function filelist($arr) {
+    public function filelist( array $arr ) {
         foreach($arr as $path) {
             $this->loadFile($path);
         }
@@ -105,7 +105,7 @@ class ClassLoader extends \AliceWonderMiscreations\CCM\AutoloadPromise
 
     /* takes an array of classes where file name does not match the
        class name so the autoloader knows how to find them */
-    public function classMap($arr) {
+    public function classMap( array $arr ) {
         foreach($arr as $key) {
             $value = $arr[$key];
             if(! array_key_exists($key, $this->classMap)) {
@@ -115,7 +115,7 @@ class ClassLoader extends \AliceWonderMiscreations\CCM\AutoloadPromise
     }
   
     /* loads a library class within the ccm root */
-    public function loadClass($class) {
+    public function loadClass( string $class ) {
         if($this->cacheCheck($class)) {
             return;
         }
@@ -147,7 +147,7 @@ class ClassLoader extends \AliceWonderMiscreations\CCM\AutoloadPromise
     }
 
     /* loads a PEAR class */
-    public function pearClass($class) {
+    public function pearClass( string $class ) {
         if(strpos($class, '.') === false) {
             $file = str_replace('_', '/', $class).'.php';
             if ($path = stream_resolve_include_path($file)) {
@@ -165,7 +165,7 @@ class ClassLoader extends \AliceWonderMiscreations\CCM\AutoloadPromise
 
     /* loads a class within the phpinclude path if the
        file name matches the class name */
-    public function localSystemClass($class) {
+    public function localSystemClass( string $class ) {
         $arr = explode("\\", $class);
         $class = end($arr);
         foreach($this->suffixArray as $suffix) {
