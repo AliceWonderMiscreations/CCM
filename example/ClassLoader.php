@@ -1,7 +1,6 @@
 <?php
 
-/* Do not use - not all functions have been tested
-     and I have modified some since last time I tested them */
+/* An example implementation of the AutoloadPromise abstract class */
 
 /*
  +-----------------------------------------------------------------------+
@@ -14,27 +13,17 @@
  +-----------------------------------------------------------------------+
 */
 
-/* I attempt to *mostly* comply with PSR-2 
-     but this class is NOT intended to loaded with an auto-loader, it
-     is an auto-loader, so it is not installed in a directory
-     structure for easy PSR-4 compliance */
+// manually load the promise
+require_once(__DIR__ . '/stable/libraries/alicewondermiscreations/ccm/AutoloadPromise.php');
 
-namespace AliceWonderMiscreations\CCM;
+namespace CCM;
 
 class ClassLoader extends \AliceWonderMiscreations\CCM\AutoloadPromise
 {
     /* properties */
   
-    // Directory with re-usable classes managed by this project
-    //protected $ccmBase = '/usr/share/ccm/';
-    // The suffixes to look for with file names
-    //protected $suffixArray = array('.php', '.class.php', '.inc.php');
-    // Where PEAR packages are usually installed
-    //protected $pearPathArray = array('/usr/share/ccm/pear', '/usr/local/share/pear/', '/usr/share/pear/');
     // Array for mapping class names to non-standard file paths
     protected $classMap = array();
-    // branch search order within $ccmBase
-    //public $ccmBranchOrder = array('local','stable');
     // cache the path?
     protected $cachePath = false;
     // key for cache
@@ -107,27 +96,6 @@ class ClassLoader extends \AliceWonderMiscreations\CCM\AutoloadPromise
         return false;
     }
   
-    /* allows changing of the branch order for class file searching */
-    /*
-    public function changeDefaultSearchPath($string) {
-        $arr = explode(':', $string);
-        $newpath = array();
-        foreach($arr as $branch) {
-            $branch = trim(strtolower($branch));
-            if(in_array($branch, array ('local', 'devel', 'stable', 'custom'))) {
-                if(! in_array($branch, $newpath)) {
-                    $newpath[] = $branch;
-                }
-            }
-        }
-        if(count($newpath) === count($arr)) {
-            $this->ccmBranchOrder = $newpath;
-        } else {
-            return false;
-        }
-    }
-    */
-
     /* takes an array of files to be loaded and attempts to load them */
     public function filelist($arr) {
         foreach($arr as $path) {
@@ -208,14 +176,17 @@ class ClassLoader extends \AliceWonderMiscreations\CCM\AutoloadPromise
             }
         }
     }
-
-    public function __construct($string="") {
+    
+    public function setCacheKey( string $string ) {
         if (extension_loaded('apcu') && ini_get('apc.enabled')) {
             if(strlen($string) > 0) {
                 $this->cachePath = true;
-                $this->cacheKey = hash('ripemd160', $string);
+                $this->cacheKey = $string;
             }
         }
+    }
+
+    public function __construct() {
     }
 }
 ?>
