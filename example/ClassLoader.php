@@ -16,9 +16,9 @@ namespace CCM;
 */
 
 // manually load the promise
-require_once(__DIR__ . '/stable/libraries/alicewondermiscreations/ccm/AutoloadPromise.php');
+require_once(__DIR__ . '/stable/libraries/ccm/promises/AutoloadPromise.php');
 
-class ClassLoader extends \AliceWonderMiscreations\CCM\AutoloadPromise
+class ClassLoader extends \CCM\Promises\AutoloadPromise
 {
     /* properties */
   

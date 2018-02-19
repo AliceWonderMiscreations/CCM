@@ -17,7 +17,7 @@ The class files that extend the `*Promise` abstract classes should use the
 
     <?php
     namespace CCM;
-    class FooBar extends \AliceWonderMiscreations\CCM\WhateverPromise
+    class FooBar extends \CCM\Promises\WhateverPromise
     {
       code here
     }
@@ -39,7 +39,7 @@ When extending the class for a custom autoloader, the custome autoloader should
 use the class name `\CCM\ClassLoader` and should explicitly load the promise
 abstract class:
 
-    require_once(__DIR__ . '/stable/libraries/alicewondermiscreations/ccm/AutoloadPromise.php');
+    require_once(__DIR__ . '/stable/libraries/ccm/promises/AutoloadPromise.php');
 
 This is because autoloading does not exist until after an object of the class
 has been created.

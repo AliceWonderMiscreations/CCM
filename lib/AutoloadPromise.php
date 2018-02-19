@@ -4,7 +4,7 @@
  *  An autoloading class for php-ccm MUST extend this class
  */
 
-namespace AliceWonderMiscreations\CCM;
+namespace CCM\Promises;
 
 abstract class AutoloadPromise
 {
