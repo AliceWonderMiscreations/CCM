@@ -20,8 +20,8 @@ require_once(__DIR__ . '/stable/libraries/ccm/promises/AutoloadPromise.php');
 
 class ClassLoader extends \CCM\Promises\AutoloadPromise
 {
-    /* properties */
-  
+    /* class properties */
+ 
     // Array for mapping class names to non-standard file paths
     protected $classMap = array();
     // cache the path?
@@ -31,44 +31,44 @@ class ClassLoader extends \CCM\Promises\AutoloadPromise
     // the version number
     private $vversion = '0.0.0';
 
-    /* methods */
-    
+    /* class methods */
+ 
     /* return the version */
     public function version() {
         return $this->vversion;
     }
-    
+ 
     // If caching is enabled and file location of class is
     //  cached, loads from file rather than searching for file
     protected function cacheCheck($class) {
-      if($this->cachePath) {
-        $string = $this->cacheKey . $class;
-        $hkey = hash('ripemd160', $string);
-        $hkey = substr($hkey, 5, 14);
-        if($filename = apcu_fetch($hkey)) {
-          if(file_exists($filename)) {
-            require_once($filename);
-            return true;
-          }
+        if($this->cachePath) {
+            $string = $this->cacheKey . $class;
+            $hkey = hash('ripemd160', $string);
+            $hkey = substr($hkey, 5, 14);
+            if($filename = apcu_fetch($hkey)) {
+                if(file_exists($filename)) {
+                    require_once($filename);
+                    return true;
+                }
+            }
         }
-      }
-      return false;
+        return false;
     }
-    
+ 
     // If caching is enabled, caches the location on the
     //  filesystem associated with the class
     protected function wrapRequire($class, $filename) {
-      if($this->cachePath) {
-        $string = $this->cacheKey . $class;
-        $hkey = hash('ripemd160', $string);
-        $hkey = substr($hkey, 5, 14);
-        // cache for about three hours
-        //  randomizes cache time to spread out needed
-        //  reloads as cache expires. Overthinking things??
-        $cacheTime = 10800 + rand(0,1800);
-        apcu_store($hkey, $filename, $cacheTime);
-      }
-      require_once($filename);
+        if($this->cachePath) {
+            $string = $this->cacheKey . $class;
+            $hkey = hash('ripemd160', $string);
+            $hkey = substr($hkey, 5, 14);
+            // cache for about three hours
+            //  randomizes cache time to spread out needed
+            //  reloads as cache expires. Overthinking things??
+            $cacheTime = 10800 + rand(0,1800);
+            apcu_store($hkey, $filename, $cacheTime);
+        }
+        require_once($filename);
     }
 
     /* Loads a file using full path so phpinclude directory is not needed.
@@ -95,7 +95,7 @@ class ClassLoader extends \CCM\Promises\AutoloadPromise
         }
         return false;
     }
-  
+ 
     /* takes an array of files to be loaded and attempts to load them */
     public function filelist( array $arr ) {
         foreach($arr as $path) {
@@ -113,7 +113,7 @@ class ClassLoader extends \CCM\Promises\AutoloadPromise
             }
         }
     }
-  
+ 
     /* loads a library class within the ccm root */
     public function loadClass( string $class ) {
         if($this->cacheCheck($class)) {
@@ -176,7 +176,7 @@ class ClassLoader extends \CCM\Promises\AutoloadPromise
             }
         }
     }
-    
+ 
     public function setCacheKey( string $string ) {
         if (extension_loaded('apcu') && ini_get('apc.enabled')) {
             if(strlen($string) > 0) {
