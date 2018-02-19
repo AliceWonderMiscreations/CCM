@@ -1,5 +1,7 @@
 <?php
 
+namespace CCM;
+
 /* An example implementation of the AutoloadPromise abstract class */
 
 /*
@@ -15,8 +17,6 @@
 
 // manually load the promise
 require_once(__DIR__ . '/stable/libraries/alicewondermiscreations/ccm/AutoloadPromise.php');
-
-namespace CCM;
 
 class ClassLoader extends \AliceWonderMiscreations\CCM\AutoloadPromise
 {

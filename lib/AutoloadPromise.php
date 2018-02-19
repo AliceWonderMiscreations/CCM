@@ -39,7 +39,7 @@ abstract class AutoloadPromise
         if(count($newpath) === count($arr)) {
             $this->ccmBranchOrder = $newpath;
         } else {
-            throw new \Exception('The arguement ' . $string . ' is not a valid path string.');
+            error_log('Warning: The arguement ' . $string . ' is not a valid CCM path string.');
             return false;
         }
     }
@@ -65,7 +65,7 @@ abstract class AutoloadPromise
     
     /* overloading */
     public function __call($name, $arguments) {
-        throw new \Exception('Method ' . $name . ' is not defined in the ' . get_class($this) . ' class');
+        error_log('Warning: Method ' . $name . ' is not defined in the ' . get_class($this) . ' class');
         return;
     }
 }
