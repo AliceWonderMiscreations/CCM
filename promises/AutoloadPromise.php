@@ -44,10 +44,10 @@ abstract class AutoloadPromise
         }
     }
     
-    /* an array of files to be loaded relative to branch/libraries */
+    /* an array of files to be loaded relative to /usr/share/ccm/branch */
     abstract public function filelist( array $array );
     
-    /* an array of classes and the files that contain them relative to branch/libraries */
+    /* an array of classes and the files that contain them relative to /usr/share/ccm/branch */
     abstract public function classMap( array $array );
     
     /* A class to be searched for within branch/libraries and loaded when found */
