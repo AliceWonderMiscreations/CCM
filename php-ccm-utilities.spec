@@ -75,7 +75,7 @@ install -m644 example/ClassLoader.php %{buildroot}%{basedir}/
 %files -n php-ccm-autoloader
 %defattr(-,root,root,-)
 %license LICENSE.md
-%doc docs/ClassLoader.md
+%doc LICENSE.md docs/ClassLoader.md
 %{basedir}/ClassLoader.php
 
 
