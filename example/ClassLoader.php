@@ -29,15 +29,16 @@ class ClassLoader extends \CCM\Promises\AutoloadPromise
     // key for cache
     protected $cacheKey = '';
     // the version number
-    private $vversion = '0.0.0';
+    const VVERSION = '1';
 
     /* class methods */
  
     /* return the version */
     public function version() {
-        return $this->vversion;
+        $string = 'Reference CCM\ClassLoader Version ' . self::VVERSION . '(API ' . self::APIV . ')';
+        return $string;
     }
- 
+
     // If caching is enabled and file location of class is
     //  cached, loads from file rather than searching for file
     protected function cacheCheck($class) {

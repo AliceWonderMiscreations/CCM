@@ -1,4 +1,4 @@
-%define pkgversion 0.0.1
+%define pkgversion 0.0.2
 # Increment below by one when tweaking the spec file but the version has not
 #  changed and the security patch release has not changed
 %define pkgtweakv 1
@@ -35,7 +35,8 @@ Source20:	CCM-%{version}.sha256
 #BuildRequires:	
 Requires:	php(language) >= 5.3.0
 
-Provides:	php-ccm-promise(autoload) = 1.0.0
+Provides:	CCM-promise(autoload) = 1.0.0
+Provides:	CCM-mmpromise(autoload) = 1.0
 
 %description
 This package provides utility classes needed for the PHP-CCM ecosystem.
@@ -46,6 +47,10 @@ for deployment.
 Group:		php/libraries
 Summary:	The default PHP-CCM class autoloader
 Requires:	php-ccm-promise(autoload) >= 1.0.0
+
+Provides:	CCM-keptpromise(autoload) = 1
+Provides:	CCM-mmkeptpromise(autoload) = 1.0
+Requires:	CCM-mmpromise(autoload) = 1.0
 
 %description -n php-ccm-autoloader
 This package provides the default php-ccm class autoloader.
@@ -69,7 +74,7 @@ install -m644 example/ClassLoader.php %{buildroot}%{basedir}/
 %files
 %defattr(-,root,root,-)
 %license LICENSE.md
-%doc README.md LICENSE.md composer.json
+%doc README.md LICENSE.md composer.json docs/PromiseAPI.md docs/AutoloadPromise-*
 %{basedir}/stable/libraries/ccm/
 
 %files -n php-ccm-autoloader

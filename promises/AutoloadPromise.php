@@ -10,6 +10,8 @@ abstract class AutoloadPromise
 {
     /* class properties */
 
+    const APIV = '1.0.0';
+
     // Directory with re-usable classes managed by php-ccm project
     protected $ccmBase = '/usr/share/ccm/';
  
@@ -20,10 +22,14 @@ abstract class AutoloadPromise
     protected $suffixArray = array('.php', '.class.php', '.inc.php');
  
     // Where PEAR packages are usually installed
-    protected $pearPathArray = array('/usr/share/ccm/pear', '/usr/local/share/pear/', '/usr/share/pear/');
+    protected $pearPathArray = array('/usr/share/ccm/pear', '/usr/local/share/pear', '/usr/share/pear');
 
 
     /* class methods */
+
+    public function getPromiseAPI() {
+        return self::APIV;
+    }
 
     /* allows changing of the branch order for class file searching */
     public function changeDefaultSearchPath( string $string ) {
@@ -44,6 +50,9 @@ abstract class AutoloadPromise
             return false;
         }
     }
+
+    /* provide a version for the class extending this Promise */
+    abstract public function version();
  
     /* an array of files to be loaded relative to /usr/share/ccm/branch */
     abstract public function filelist( array $array );
