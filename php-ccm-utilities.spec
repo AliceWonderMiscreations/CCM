@@ -46,7 +46,6 @@ for deployment.
 %package -n php-ccm-autoloader
 Group:		php/libraries
 Summary:	The default PHP-CCM class autoloader
-Requires:	php-ccm-promise(autoload) >= 1.0.0
 
 Provides:	CCM-mmkeptpromise(autoload1) = 1.0
 Requires:	CCM-mmpromise(autoload1) = 1.0
@@ -79,11 +78,14 @@ install -m644 example/ClassLoader.php %{buildroot}%{basedir}/
 %files -n php-ccm-autoloader
 %defattr(-,root,root,-)
 %license LICENSE.md
-%doc LICENSE.md docs/ClassLoader.md
+%doc LICENSE.md docs/ClassLoader.md example/autoload.php
 %{basedir}/ClassLoader.php
 
 
 
 %changelog
-* Sun Feb 18 2018 Alice Wonder <buildmaster@librelamp.com> - 1.2.3-1.ccm.1
+* Tue Feb 20 2018 Alice Wonder <buildmaster@librelamp.com> - 0.0.2-0.ccm.1
+- update for further testing
+
+* Sun Feb 18 2018 Alice Wonder <buildmaster@librelamp.com> - 0.0.1-0.ccm.1
 - Initial spec file.
