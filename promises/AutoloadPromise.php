@@ -30,7 +30,7 @@ abstract class AutoloadPromise
 
     /* class methods */
 
-    public function getPromiseAPI() {
+    public static function getPromiseAPI() {
         return self::APIV;
     }
 
@@ -56,7 +56,7 @@ abstract class AutoloadPromise
     }
 
     /* provide a version for the class extending this Promise */
-    abstract public function version();
+    abstract public static function version();
  
     /* an array of files to be loaded relative to /usr/share/ccm/branch */
     abstract public function filelist( array $array );

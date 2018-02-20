@@ -1,19 +1,17 @@
 AutoloadPromise 1.0.0 API
 =========================
 
-The file `AutoloadPromise.php` will always remain fully compatible with the
-AutoloadPromise 1.0.0 API. Any changes that would break an application using
-that API will require a different class name in a different promise file name.
+Implementationa of the AutoloadPromise 1.0.0 API *should* be in a class name
+called `ClassLoader`.
 
-Autoload classes that extend the `\CCM\Promises\AutoloadPromise` API are to
-have the file name `ClassLoader.php` and use the class name `\CCM\ClassLoader`.
+Implementations for global use __MUST__ use that class name within the
+namespace `CCM` and be installed at `/usr/share/ccm/ClassLoader.php`.
 
-Autoload classes that extend a different API must use a different class name
-and a different file name.
-
-The `ClassLoader.php` file is expected to reside at
-`/usr/share/ccm/ClassLoader.php` so that web applications wishing to use the
-AutoloadPromise 1.0.0 API can require that file and get what they expect.
+In the event an application needs methods not defined by this API, the
+application is free to copy the reference implementation of the API (located in
+the `example/ directory of the github repo) and add the methods the application
+needs. The application should however change the namespace to a namespace
+specific to the application rather than the `CCM` namespace.
 
 The AutoloadPromise 1.0.0 API promises to have the following features:
 
@@ -301,6 +299,9 @@ System administrators should be required to specifically modify the application
 In theory caching the resolved file locations should increase performance as
 fewer filesystem I/O calls are needed to determine the location of the file
 that needs to be loaded.
+
+With platter hard drives that use a disc arm, I suspect there is a real world
+benefit to caching the file locations associated with a class.
 
 However, I am not sure the performance difference is all that great when a
 server with modern SSD drives is used.

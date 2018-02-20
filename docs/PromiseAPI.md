@@ -1,5 +1,5 @@
-Promise API Version Scheme
-==========================
+Promise Class API Version Scheme
+================================
 
 What I call a ‘Promise’ class is an abstract class that requires certain
 features be implemented by the classes that extend the class.
@@ -39,8 +39,11 @@ implemented by the classes that extend it, but the classes that extend it will
 continue to work with scripts that use them as expected without those scripts
 needing any modification.
 
-In these cases, a suffix will be added to the class name after the word
-`Promise` so that the old Promise can also remain.
+In these cases, a suffix containing the minor release will be added to the
+class name after the word `Promise` so that the old Promise can also remain.
+
+For example, a Minor Release bump to the AutoloadPromise API from 1.0.0 to
+1.1.0 would rename the class to `AutoloadPromise1`.
 
 
 Increments to the API Major Release
@@ -50,7 +53,18 @@ A change to a Promise API that is *not* backwards compatible will increment
 the Major release.
 
 Both the Promise and classes that extend the Promise will need to use a new
-class name to avoid conflicts with the older API.
+class name to avoid conflicts with the older API. The major release will be
+added as a suffic to the class name, but as a letter.
+
+So for example a bump in the AutoloadPromise 1.1.0 API to 2.0.0 would result
+in the name of the Promise changing to `AutoloadPromiseB`.
+
+A bump to 2.1.0 would then have the class name `AutoloadPromiseB1`.
+
+The letter `A` will not be used to represent `1` since `1` will always be the
+first stable Major Release of a Promise class, until we reach Major Version 27
+where `AA` would be used, though I suspect if a Promise ever needs that many
+major release versions, there is a design problem...
 
 
 Application Stability
