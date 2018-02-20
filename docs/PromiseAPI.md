@@ -66,32 +66,30 @@ RPM Spec File Requires and Provides
 
 The RPM that provides a Promise will use the virtual provides:
 
-    Provides: CCM-promise(name)   = major.minor.point
-    Provides: CCM-mmpromise(name) = major.minor
+    Provides: CCM-promise(nameMajor)   = major.minor.point
+    Provides: CCM-mmpromise(nameMajor) = major.minor
 
-Where *name* is the lower case name of the promise.
+Where *name* is the lower case name of the promise and *Major* is the major
+version of the Promise.
 
 The RPM that provides a class that extends a Promise will use the virtial
 provide:
 
-    Provides: CCM-keptpromise(name)   = major
-    Provides: CCM-mmkeptpromise(name) = major.minor
-    Requires: CCM-mmpromise(name)     = major.minor
+    Provides: CCM-mmkeptpromise(nameMajor) = major.minor
+    Requires: CCM-mmpromise(nameMajor)     = major.minor
 
 A PHP application that only cares about the major.0.0 API will then have:
 
-    Requires: CCM-keptpromise(name)  = major
+    Requires: CCM-mmkeptpromise(nameMajor)
 
 If the PHP application needs features added in a specific minor release:
 
-    Requires: CCM-keptpromise(name)   = major
-    Requires: CCM-mmkeptpromise(name) >= major.minor
+    Requires: CCM-mmkeptpromise(nameMajor) >= major.minor
 
 If the PHP application needs a feature in a particular point release:
 
-    Requires: CCM-keptpromise(name)   = major
-    Requires: CCM-mmkeptpromise(name) >= major.minor
-    Requires: CCM-promise(name)       >= major.minor.point
+    Requires: CCM-mmkeptpromise(nameMajor) >= major.minor
+    Requires: CCM-promise(nameMajor)       >= major.minor.point
 
 In the vast majority of cases, a web application that needs the implementation
 of a Promise will only need to worry about the major version.
