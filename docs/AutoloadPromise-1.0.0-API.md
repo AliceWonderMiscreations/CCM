@@ -48,15 +48,15 @@ needed PEAR module can not be found within the the `phpinclude` path, the
 autoloader for PEAR modules will look in `/usr/share/ccm/pear` before looking
 in other directories.
 
-The version 1.0.0 of the Promise also defines the following two additional
-search paths:
+The version 1.0.0 of the AutoloadPromise also defines the following two
+additional search paths:
 
 1. `/usr/local/share/pear`
 2. `/usr/share/pear`
 
-However implementations of the Promise are not required to do so, they are only
-required to search with `/usr/share/ccm/pear` if the needed module can not be
-found within the `phpinclude` path.
+However implementations of the AutoloadPromise are not required to do so, they
+are only required to search with `/usr/share/ccm/pear` if the needed module can
+not be found within the `phpinclude` path.
 
 
 File Suffix Search Order
@@ -75,8 +75,8 @@ Public Method `getPromiseAPI()`
 
 This method __MUST__ return the `const APIV` property defined in the
 `AutoloadPromise` class. The AutoloadPromise class provides a function that
-meets the needs of the API. Extending the Promise will inherit a suitable
-method.
+meets the needs of the API. Extending the AutoloadPromise class will inherit a
+suitable method.
 
 
 Public Method `version()`
@@ -100,9 +100,9 @@ then in the `stable` branch, and it would *not* look for matches in either the
 `local` or `devel` branches.
 
 Implementations of the AutoloadPromise class must __not__ change the default
-search path if fed an invalid argument. The Promise class provides a function
-that meets the needs of the API. Extending the Promise will inherit a suitable
-method.
+search path if fed an invalid argument. The AutoloadPromise class provides a
+function that meets the needs of the API. Extending the Promise will inherit a
+suitable method.
 
 
 Public Method `filelist( array $array )`
@@ -205,11 +205,110 @@ to be automatically found and loaded when the class is called.
 Public Method `pearClass( string $class )`
 ------------------------------------------
 
+The arguement is a string containing the ‘Fully Qualified Class Name’. When
+called, this method attempts to load the class. It should convert the FQCN to
+the directory and filename structure used by PEAR.
+
+The class should then be loaded if one of the following two conditions are met:
+
+A) The file can be found withing the `phpinclude` path.
+
+B) The file can be found within the the `ClassLoader` configured PEAR search
+directories, and it __MUST__ search `/usr/share/ccm/pear` before searching
+through other possible paths for PEAR modules.
+
+PHP applications that depend upon PEAR modules should register this method with
+`spl_autoload_register`:
+
+    spl_autoload_register(function ($class) {
+        global $obj;
+        $obj->pearClass($class);
+    });
 
 
+Public Method `localSystemClass( string $class )`
+-------------------------------------------------
+
+This method exists for the convenience of system administrators. We often have
+our own classes that are defined in class files within the `phpinclude` path.
+
+This method should load them as long as the file name matches the class name.
+This method should not care about the namespace, it should only look for
+filenames that match the class name. Those who need it should be able to
+register it via:
+
+    spl_autoload_register(function ($class) {
+        global $obj;
+        $obj->localSystemClass($class);
+    });
+
+This method should only search within the `phpinclude` path. The AutoloadPromise
+class provides a function that meets the needs of the API. Extending the Promise
+AutoloadPromise class will inherit a suitable method.
 
 
+Public Method `setCacheKey( string $string )`
+---------------------------------------------
+
+By default, implementions of the AutoloadPromise __MUST__ have caching of the
+file system location of class files disabled. Many cache implementations are
+not secure to use on shared hosting platforms.
+
+If an implementation of the AutoloadPromise API does not support caching at all
+then this method should simply return.
+
+If the implementation does support caching, calling this method with a string
+argument of at least one character in length should enable the caching.
+
+The string argument is called the *application key* and can be any string with
+a length greater than zero, including a single space.
+
+When two instances of the ClassLoader have an identical *application key* and
+have an identical branch search path, then the cache key to set and retrieve
+the file path for a given FQCN should be identical.
+
+When the *application key* and/or the branch search path differ, then the
+cache key used to set and retrieve the file path for a given FQCN should also
+differ.
 
 
+### Do Not Always Cache
+
+Implementations of the AutoloadPromise __MUST NOT__ cache the path to classes
+specified in either the `classMap()` method or the `localSystemClass()` method.
+
+Only paths that are discovered using the class name and namespace or PEAR
+modules should have the path to the file to load cached.
+
+This is to avoid possible collisions that could occur if two applications have
+the same *application key* and branch path, but one uses either of those two
+methods to explicitly load a version of the same FQCN that differs from what
+would be loaded from automated path discovery.
 
 
+### Application Implementation Note
+
+PHP applications should not call this method by default. Many shared hosting
+services have APCu enabled by default, but it is not safe to use caching of
+file paths that will be executed via APCu on a shared server.
+
+System administrators should be required to specifically modify the application
+`autoload.php` script to enable this feature.
+
+
+### Cache Performance Note
+
+In theory caching the resolved file locations should increase performance as
+fewer filesystem I/O calls are needed to determine the location of the file
+that needs to be loaded.
+
+However, I am not sure the performance difference is all that great when a
+server with modern SSD drives is used.
+
+Furthermore the design of CCM reduces the searching required, applications
+will generally only have one or two branches defined in their search path and
+the file containing the needed class will usually have a `.php` suffix which is
+the first suffix searched.
+
+When testing is done, if the performance benefits from caching are not very
+signigicant then future versions of the AutoloadPromise API may remove caching.

@@ -17,6 +17,9 @@ abstract class AutoloadPromise
  
     // branch search order within $ccmBase
     protected $ccmBranchOrder = array('local','stable');
+    
+    // this is only needed for caching the path
+    protected $ccmBranchPathString = 'reset on change';
  
     // The suffixes to look for with file names
     protected $suffixArray = array('.php', '.class.php', '.inc.php');
@@ -44,6 +47,7 @@ abstract class AutoloadPromise
             }
         }
         if(count($newpath) === count($arr)) {
+            $this->ccmBranchPathString = implode(':', $newpath);
             $this->ccmBranchOrder = $newpath;
         } else {
             error_log('Warning: The arguement ' . $string . ' is not a valid CCM path string.');
@@ -67,8 +71,19 @@ abstract class AutoloadPromise
        within phpinclude path and then through every directory in $pearPathArray */
     abstract public function pearClass( string $class );
  
-    /* searches for a class within the phpinclude path */
-    abstract public function localSystemClass( string $class );
+    /* loads a class within the phpinclude path if the
+       file name matches the class name */
+    public function localSystemClass( string $class ) {
+        $arr = explode("\\", $class);
+        $class = end($arr);
+        foreach($this->suffixArray as $suffix) {
+            $file = $class . $suffix;
+            if ($path = stream_resolve_include_path($file)) {
+                require_once($path);
+                return;
+            }
+        }
+    }
  
     /* This function must exist even if your implementation does not use caching */
     abstract public function setCacheKey( string $string );

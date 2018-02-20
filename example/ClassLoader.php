@@ -43,7 +43,7 @@ class ClassLoader extends \CCM\Promises\AutoloadPromise
     //  cached, loads from file rather than searching for file
     protected function cacheCheck($class) {
         if($this->cachePath) {
-            $string = $this->cacheKey . $class;
+            $string = $this->cacheKey . $class . $this->ccmBranchPathString;
             $hkey = hash('ripemd160', $string);
             $hkey = substr($hkey, 5, 14);
             if($filename = apcu_fetch($hkey)) {
@@ -60,7 +60,7 @@ class ClassLoader extends \CCM\Promises\AutoloadPromise
     //  filesystem associated with the class
     protected function wrapRequire($class, $filename) {
         if($this->cachePath) {
-            $string = $this->cacheKey . $class;
+            $string = $this->cacheKey . $class . $this->ccmBranchPathString;
             $hkey = hash('ripemd160', $string);
             $hkey = substr($hkey, 5, 14);
             // cache for about three hours
@@ -164,20 +164,6 @@ class ClassLoader extends \CCM\Promises\AutoloadPromise
         }
     }
 
-    /* loads a class within the phpinclude path if the
-       file name matches the class name */
-    public function localSystemClass( string $class ) {
-        $arr = explode("\\", $class);
-        $class = end($arr);
-        foreach($this->suffixArray as $suffix) {
-            $file = $class . $suffix;
-            if ($path = stream_resolve_include_path($file)) {
-                require_once($path);
-                return;
-            }
-        }
-    }
- 
     public function setCacheKey( string $string ) {
         if (extension_loaded('apcu') && ini_get('apc.enabled')) {
             if(strlen($string) > 0) {
