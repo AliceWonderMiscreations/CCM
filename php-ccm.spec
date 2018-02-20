@@ -18,7 +18,7 @@
 %define basedir %{_datadir}/ccm
 %define _defaultdocdir %{basedir}/doc
 
-Name:		php-ccm-utilities
+Name:		php-ccm-promises
 Version:	%{pkgversion}
 Release:	%{pkgsecurityv}.ccm.%{pkgtweakv}%{?pkgoptother}
 BuildArch:	noarch
@@ -40,7 +40,7 @@ Provides:	CCM-promise(autoload1) = 1.0.0
 Provides:	CCM-mmpromise(autoload1) = 1.0
 
 %description
-This package provides utility classes needed for the PHP-CCM ecosystem.
+This package provides promise classes needed for the PHP-CCM ecosystem.
 This is a package in development, the PHP-CCM ecosystem is not ready
 for deployment.
 
