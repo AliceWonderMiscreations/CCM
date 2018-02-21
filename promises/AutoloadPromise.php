@@ -17,9 +17,9 @@ abstract class AutoloadPromise
     const APIPOINT = 0;
 
     // Directory with re-usable classes managed by php-ccm project
-    protected $ccmBase = '/usr/share/ccm/';
+    const CCMBASE = '/usr/share/ccm/';
  
-    // branch search order within $ccmBase
+    // branch search order within CCMBASE
     protected $ccmBranchOrder = array('local','stable');
     
     // this is only needed for caching the path

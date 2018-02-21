@@ -83,7 +83,7 @@ class ClassLoader extends \CCM\Promises\AutoloadPromise
             if($full) {
                 $fullpath = $path;
             } else {
-                $fullpath = $this->ccmBase . $branch . $path;
+                $fullpath = CCMBASE . $branch . $path;
             }
             if(file_exists($fullpath)) {
                 if(strlen($class) > 0) {
