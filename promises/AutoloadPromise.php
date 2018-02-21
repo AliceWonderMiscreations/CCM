@@ -9,8 +9,12 @@ namespace CCM\Promises;
 abstract class AutoloadPromise
 {
     /* class properties */
-
-    const APIV = '1.0.0';
+    
+    const APIMAJOR = 1;
+    
+    const APIMINOR = 0;
+    
+    const APIPOINT = 0;
 
     // Directory with re-usable classes managed by php-ccm project
     protected $ccmBase = '/usr/share/ccm/';
@@ -31,7 +35,8 @@ abstract class AutoloadPromise
     /* class methods */
 
     public static function getPromiseAPI() {
-        return self::APIV;
+        $string = APIMAJOR . '.' . APIMINOR . '.' . APIPOINT;
+        return $string;
     }
 
     /* allows changing of the branch order for class file searching */

@@ -29,13 +29,13 @@ class ClassLoader extends \CCM\Promises\AutoloadPromise
     // key for cache
     protected $cacheKey = '';
     // the version number
-    const VVERSION = '1';
+    const VVERSION = 1;
 
     /* class methods */
  
     /* return the version */
     public static function version() {
-        $string = 'Reference CCM\ClassLoader Version ' . self::VVERSION . ' (API ' . self::APIV . ')';
+        $string = 'Reference CCM\ClassLoader Version ' . self::VVERSION . ' (API ' . APIMAJOR . '.' . APIMINOR . '.' . APIPOINT . ')';
         return $string;
     }
 
