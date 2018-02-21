@@ -23,13 +23,13 @@ abstract class AutoloadPromise
     protected $ccmBranchOrder = array('local','stable');
     
     // this is only needed for caching the path
-    protected $ccmBranchPathString = 'reset on change';
+    protected $ccmBranchPathString = 'reset on branch order change';
  
     // The suffixes to look for with file names
     protected $suffixArray = array('.php', '.class.php', '.inc.php');
  
     // Where PEAR packages are usually installed
-    protected $pearPathArray = array('/usr/share/ccm/pear', '/usr/local/share/pear', '/usr/share/pear');
+    protected $pearPathArray = array('/usr/share/ccm/pear', '/usr/share/pear', '/usr/share/php');
 
 
     /* class methods */
