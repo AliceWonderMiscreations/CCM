@@ -35,7 +35,7 @@ abstract class AutoloadPromise
     /* class methods */
 
     public static function getPromiseAPI() {
-        $string = APIMAJOR . '.' . APIMINOR . '.' . APIPOINT;
+        $string = self::APIMAJOR . '.' . self::APIMINOR . '.' . self::APIPOINT;
         return $string;
     }
 

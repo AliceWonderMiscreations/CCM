@@ -35,7 +35,7 @@ class ClassLoader extends \CCM\Promises\AutoloadPromise
  
     /* return the version */
     public static function version() {
-        $string = 'Reference CCM\ClassLoader Version ' . self::VVERSION . ' (API ' . APIMAJOR . '.' . APIMINOR . '.' . APIPOINT . ')';
+        $string = 'Reference CCM\ClassLoader Version ' . self::VVERSION . ' (API ' . self::APIMAJOR . '.' . self::APIMINOR . '.' . self::APIPOINT . ')';
         return $string;
     }
 
