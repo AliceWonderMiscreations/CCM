@@ -9,8 +9,7 @@ class foo extends \CCM\Promises\PackageDatabasePromise
 {
     public function __construct( string $branch ) {
         $this->branch = $branch;
-        $this->dbfile = self::DBDIR . $branch . '.json';
-        $this->dblock = self::DBDIR . $branch . '.dblock';
+        $this->cleanStaleLock();
     }
 }
 
@@ -38,18 +37,6 @@ if(strlen($package) === 0) {
 }
 
 $obj = new foo($branch);
-
-// remove stale lockfile
-$lock = $obj->dblock;
-if(file_exists($lock)) {
-    $mtime = filemtime($lock);
-    $now = time();
-    $diff = $now - $mtime;
-    // No valid reason for it to be > 5 minutes old
-    if($diff > 300) {
-        $obj->deleteLockFile();
-    }
-}
 
 $obj->delPackage($vendor, $package);
 

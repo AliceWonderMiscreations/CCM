@@ -3,10 +3,11 @@
 /* Not fully tested */
 
 /* classes that extend this promise should
-   set the branch and dbfile in the constructor.
-   They should not change any of the methods except
-   to fix a bug in the promise if there are any */
-   
+   set the branch property and then run
+   $this->cleanStaleLock() as part of the
+   constructor
+*/
+
 /* scripts that call this should use set_time_limit(35) */
 
 namespace CCM\Promises;
@@ -16,12 +17,13 @@ abstract class PackageDatabasePromise
 
     /* class properties */
 
-    const APIMAJOR = 0;
+    const APIMAJOR = 1;
     const APIMINOR = 0;
     const APIPOINT = 0;
 
     // Directory with the JSON database files
     const DBDIR = '/usr/share/ccm/jsondb/';
+    // for testing I comment out above and uncomment below
     //const DBDIR = '/home/alice/jsondb/';
 
     protected $lockkey = '';
@@ -111,7 +113,7 @@ abstract class PackageDatabasePromise
     }
 
     // removes the lock file
-    public function deleteLockFile() {
+    protected function deleteLockFile() {
         if(file_exists($this->dblock)) {
             @unlink($this->dblock);
         }
@@ -154,6 +156,21 @@ abstract class PackageDatabasePromise
         fwrite($handle, $json);
         fclose($handle);
         return true;
+    }
+
+    // it is recommended this be run by the constructor
+    public function cleanStaleLock () {
+        $this->dbfile = self::DBDIR . $this->branch . '.json';
+        $this->dblock = self::DBDIR . $this->branch . '.dblock';
+        if(file_exists($this->dblock)) {
+            $mtime = filemtime($this->dblock);
+            $now = time();
+            $diff = $now - $mtime;
+            // No valid reason for it to be > 5 minutes old
+            if($diff > 300) {
+                $this->deleteLockFile();
+            }
+        }
     }
 
     // add a package to the database
