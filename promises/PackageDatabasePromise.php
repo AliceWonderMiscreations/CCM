@@ -6,6 +6,8 @@
    set the branch and dbfile in the constructor.
    They should not change any of the methods except
    to fix a bug in the promise if there are any */
+   
+/* scripts that call this should use set_time_limit(35) */
 
 namespace CCM\Promises;
 
@@ -41,6 +43,7 @@ abstract class PackageDatabasePromise
         echo "Error: " . $message . "\n";
     }
     
+    // makes sure the lock file was created by this instance
     protected function readTouch ( $file ) {
         if(file_exists($file)) {
           if(! $handle = @fopen($file, 'r')) {         
@@ -58,7 +61,9 @@ abstract class PackageDatabasePromise
         return false;
     }
     
+    // creates a lock file containing a unique random string
     protected function uniqueTouch( $file ) {
+        // exit if there is already a lock file
         if(file_exists($file)) {
             return false;
         }
@@ -79,6 +84,7 @@ abstract class PackageDatabasePromise
         return $this->readTouch($file);
     }
     
+    // try to create a lock file, keep trying if one exists
     protected function createLockFile() {
         $count = 0;
         $lock = self::DBDIR . $this->branch . '.dblock';
@@ -88,13 +94,14 @@ abstract class PackageDatabasePromise
             }
             $count++;
             sleep(1);
-            if($count > 0) {
+            if($count > 30) {
                 $this->err("Can not create lock file needed to modify database.");
                 return false;
             }
         }
     }
     
+    // removes the lock file
     protected function deleteLockFile() {
         $lock = self::DBDIR . $this->branch . '.dblock';
         if(file_exists($lock)) {
@@ -102,6 +109,7 @@ abstract class PackageDatabasePromise
         }
     }
     
+    // read the json database into a PHP array
     protected function readDatabase () {
         // if file doesn't exist do nothing
         if(file_exists($this->dbfile)) {
@@ -117,6 +125,7 @@ abstract class PackageDatabasePromise
         return true;
     }
     
+    // write the PHP array to a json database
     protected function writeDatabase () {
         $phpversion = explode('.', phpversion());
         // JSON_PRETTY_PRINT requires php >= 5.4.0
@@ -136,6 +145,7 @@ abstract class PackageDatabasePromise
         return true;
     }
     
+    // add a package to the database
     public function addPackage ( string $vendor, string $package, string $version, int $securityv, int $tweakv ) {
         $vendor = trim(strtolower($vendor));
         $package = trim(strtolower($package));
@@ -160,6 +170,7 @@ abstract class PackageDatabasePromise
         $this->deleteLockFile();
     }
     
+    // delete a package from the database
     public function delPackage ( string $vendor, string $package ) {
         $vendor = trim(strtolower($vendor));
         $package = trim(strtolower($package));
