@@ -225,7 +225,6 @@ abstract class PackageDatabasePromise
     public function listPackages() {
         $installed = array();
         if($this->checkBranch()) {
-            $installed = array();
             if($this->readDatabase()) {
                 foreach($this->database as $vendor => $vendArray) {
                     foreach($vendArray as $package => $packArray) {
