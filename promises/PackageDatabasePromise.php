@@ -27,6 +27,7 @@ abstract class PackageDatabasePromise
     protected $lockkey = '';
     protected $branch = 'fubar';
     protected $dbfile = '';
+    protected $dblock = '/tmp/foo';
     protected $database = array();
 
 
@@ -81,7 +82,6 @@ abstract class PackageDatabasePromise
         }
         // why shuffle? because we can, dammit!
         $this->lockkey = str_shuffle(hash('ripemd160', $data));
-        //var_dump($this->lockkey);
         if( ! $handle = @fopen($file, 'w')) {
             $this->err("Could not open " . $file . " for writing.");
             return false;
@@ -97,9 +97,8 @@ abstract class PackageDatabasePromise
             return false;
         }
         $count = 0;
-        $lock = self::DBDIR . $this->branch . '.dblock';
         while(true) {
-            if($this->uniqueTouch($lock)) {
+            if($this->uniqueTouch($this->dblock)) {
                 return true;
             }
             $count++;
@@ -112,10 +111,9 @@ abstract class PackageDatabasePromise
     }
 
     // removes the lock file
-    protected function deleteLockFile() {
-        $lock = self::DBDIR . $this->branch . '.dblock';
-        if(file_exists($lock)) {
-            @unlink($lock);
+    public function deleteLockFile() {
+        if(file_exists($this->dblock)) {
+            @unlink($this->dblock);
         }
     }
 
