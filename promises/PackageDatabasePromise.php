@@ -15,34 +15,41 @@ abstract class PackageDatabasePromise
 {
 
     /* class properties */
-    
+
     const APIMAJOR = 0;
-    
     const APIMINOR = 0;
-    
     const APIPOINT = 0;
-    
+
     // Directory with the JSON database files
     const DBDIR = '/usr/share/ccm/jsondb/';
     //const DBDIR = '/home/alice/jsondb/';
-    
+
     protected $lockkey = '';
     protected $branch = 'fubar';
     protected $dbfile = '';
     protected $database = array();
 
-    
+
     /* class methods */
-    
+
     public static function getPromiseAPI() {
         $string = self::APIMAJOR . '.' . self::APIMINOR . '.' . self::APIPOINT;
         return $string;
     }
-    
+
     protected function err( string $message ) {
         echo "Error: " . $message . "\n";
     }
-    
+
+    protected function checkBranch() {
+        $validBranches = array('local', 'stable', 'devel');
+        if(! in_array($this->branch, $validBranches)) {
+            $this->err($this->branch . ' is not a valid branch.');
+            return false;
+        }
+        return true;
+    }
+
     // makes sure the lock file was created by this instance
     protected function readTouch ( $file ) {
         if(file_exists($file)) {
@@ -60,7 +67,7 @@ abstract class PackageDatabasePromise
         }
         return false;
     }
-    
+
     // creates a lock file containing a unique random string
     protected function uniqueTouch( $file ) {
         // exit if there is already a lock file
@@ -83,9 +90,12 @@ abstract class PackageDatabasePromise
         fclose($handle);
         return $this->readTouch($file);
     }
-    
+
     // try to create a lock file, keep trying if one exists
     protected function createLockFile() {
+        if(! $this->checkBranch()) {
+            return false;
+        }
         $count = 0;
         $lock = self::DBDIR . $this->branch . '.dblock';
         while(true) {
@@ -100,7 +110,7 @@ abstract class PackageDatabasePromise
             }
         }
     }
-    
+
     // removes the lock file
     protected function deleteLockFile() {
         $lock = self::DBDIR . $this->branch . '.dblock';
@@ -108,7 +118,7 @@ abstract class PackageDatabasePromise
             @unlink($lock);
         }
     }
-    
+
     // read the json database into a PHP array
     protected function readDatabase () {
         // if file doesn't exist do nothing
@@ -124,9 +134,12 @@ abstract class PackageDatabasePromise
         }
         return true;
     }
-    
+
     // write the PHP array to a json database
     protected function writeDatabase () {
+        if(! $this->checkBranch()) {
+            return false;
+        }
         $phpversion = explode('.', phpversion());
         // JSON_PRETTY_PRINT requires php >= 5.4.0
         $majorphp = intval($phpversion[0]);
@@ -144,9 +157,12 @@ abstract class PackageDatabasePromise
         fclose($handle);
         return true;
     }
-    
+
     // add a package to the database
     public function addPackage ( string $vendor, string $package, string $version, int $securityv, int $tweakv ) {
+        if(! $this->checkBranch()) {
+            return false;
+        }
         $vendor = trim(strtolower($vendor));
         $package = trim(strtolower($package));
         if((strlen($vendor) === 0) || (strlen($package) === 0))  {
@@ -169,9 +185,12 @@ abstract class PackageDatabasePromise
         }
         $this->deleteLockFile();
     }
-    
+
     // delete a package from the database
     public function delPackage ( string $vendor, string $package ) {
+        if(! $this->checkBranch()) {
+            return false;
+        }
         $vendor = trim(strtolower($vendor));
         $package = trim(strtolower($package));
         if((strlen($vendor) === 0) || (strlen($package) === 0))  {
@@ -200,19 +219,22 @@ abstract class PackageDatabasePromise
         }
         $this->deleteLockFile();    
     }
-    
+
     // returns an array of every package in the branch - in the
     //  format useful for security update checks
     public function listPackages() {
         $installed = array();
-        if($this->readDatabase()) {
-            foreach($this->database as $vendor => $vendArray) {
-                foreach($vendArray as $package => $packArray) {
-                    $version = $packArray['version'];
-                    $version = preg_replace('/\./', '_', $version);
-                    $security = $packArray['security'];
-                    $tweak = $packArray['tweak'];
-                    $installed[] = $version . '-' . $security . '-' . $tweak . '.' . $package . '.' . $vendor;
+        if($this->checkBranch()) {
+            $installed = array();
+            if($this->readDatabase()) {
+                foreach($this->database as $vendor => $vendArray) {
+                    foreach($vendArray as $package => $packArray) {
+                        $version = $packArray['version'];
+                        $version = preg_replace('/\./', '_', $version);
+                        $security = $packArray['security'];
+                        $tweak = $packArray['tweak'];
+                        $installed[] = $version . '-' . $security . '-' . $tweak . '.' . $package . '.' . $vendor;
+                    }
                 }
             }
         }
