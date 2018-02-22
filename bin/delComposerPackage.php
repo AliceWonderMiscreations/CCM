@@ -17,29 +17,31 @@ $count = count($argv);
 
 if($count !== 4) {
     echo "Usage: delComposerPackage [branch] [vendor] [package]\n";
-    exit;
+    exit(1);
 }
 
 $branch = trim(strtolower($argv[1]));
 if(! in_array($branch, array('local', 'stable', 'devel')) {
     echo "Branch must be one of: local, stable, or devel\n";
-    exit;
+    exit(1);
 }
 $vendor = trim(strtolower($argv[2]));
 if(strlen($vendor) === 0) {
     echo "Vendor can not be empty string.\n";
-    exit;
+    exit(1);
 }
 $package = trim(strtolower($argv[3]));
 if(strlen($package) === 0) {
     echo "Package can not be empty string.\n";
-    exit;
+    exit(1);
 }
 
 $obj = new foo($branch);
 
-$obj->delPackage($vendor, $package);
+if (! $obj->delPackage($vendor, $package)) {
+    exit(1);
+}
 
-exit;
+exit(0);
 
 ?>

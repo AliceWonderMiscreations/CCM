@@ -175,6 +175,7 @@ abstract class PackageDatabasePromise
 
     // add a package to the database
     public function addPackage ( string $vendor, string $package, string $version, int $securityv, int $tweakv ) {
+        $return = false;
         if(! $this->checkBranch()) {
             return false;
         }
@@ -185,6 +186,7 @@ abstract class PackageDatabasePromise
             return false;
         }
         if($this->createLockFile() && $this->readDatabase()) {
+            $return = true;
             if(! isset($this->database[$vendor])) {
                 $this->database[$vendor] = array();
             }
@@ -194,15 +196,19 @@ abstract class PackageDatabasePromise
             $this->database[$vendor][$package]['version'] = $version;
             $this->database[$vendor][$package]['security'] = $securityv;
             $this->database[$vendor][$package]['tweak'] = $tweakv;
-            $this->writeDatabase();
+            if( ! $this->writeDatabase()) {
+                return false;
+            }
         } else {
             $this->err("Could not add/update package in database.");
         }
         $this->deleteLockFile();
+        return $return;
     }
 
     // delete a package from the database
     public function delPackage ( string $vendor, string $package ) {
+        $return = false;
         if(! $this->checkBranch()) {
             return false;
         }
@@ -213,6 +219,7 @@ abstract class PackageDatabasePromise
             return false;
         }
         if($this->createLockFile() && $this->readDatabase()) {
+            $return = true;
             if(isset($this->database[$vendor][$package])) {
                 unset($this->database[$vendor][$package]);
             }
@@ -227,12 +234,15 @@ abstract class PackageDatabasePromise
                 //attempt to nuke the json
                 @unlink($this->dbfile);
             } else {
-                $this->writeDatabase();
+                if( ! $this->writeDatabase()) {
+                    return false;
+                }
             }
         } else {
             $this->err("Could not delete package from database.");
         }
-        $this->deleteLockFile();    
+        $this->deleteLockFile();
+        return $return; 
     }
 
     // returns an array of every package in the branch - in the
