@@ -108,6 +108,9 @@ abstract class PackageDatabasePromise
             if($count > 30) {
                 $this->err("Can not create lock file needed to modify database.");
                 return false;
+            } elseif($count > 15) {
+                // might be a stale lock file
+                $this->cleanStaleLock();
             }
         }
     }
