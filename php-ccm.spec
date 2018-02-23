@@ -102,7 +102,7 @@ install -m644 promises/AutoloadPromise.php %{buildroot}%{basedir}/stable/librari
 install -m644 promises/PackageDatabasePromise.php %{buildroot}%{basedir}/stable/libraries/ccm/promises/
 
 install -m644 example/ClassLoader.php %{buildroot}%{basedir}/
-install -m755 bin/addComposerPackage.php ${buildroot}%{basedir}/bin/addComposerPackage
+install -m755 bin/addComposerPackage.php %{buildroot}%{basedir}/bin/addComposerPackage
 install -m755 bin/delComposerPackage.php %{buildroot}%{basedir}/bin/delComposerPackage
 
 
@@ -144,7 +144,7 @@ install -m755 bin/delComposerPackage.php %{buildroot}%{basedir}/bin/delComposerP
 %attr(0755,root,root) %{basedir}/bin/delComposerPackage
 %dir %{basedir}/jsondb
 %ghost %{basedir}/jsondb/*.dblock
-%ghost %{basedir}/jsondv/*.json
+%ghost %{basedir}/jsondb/*.json
 
 
 
