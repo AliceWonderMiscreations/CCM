@@ -159,15 +159,15 @@ abstract class PackageDatabasePromise
     }
 
     // it is recommended this be run by the constructor
-    public function cleanStaleLock () {
+    protected function cleanStaleLock () {
         $this->dbfile = self::DBDIR . $this->branch . '.json';
         $this->dblock = self::DBDIR . $this->branch . '.dblock';
         if(file_exists($this->dblock)) {
             $mtime = filemtime($this->dblock);
             $now = time();
             $diff = $now - $mtime;
-            // No valid reason for it to be > 5 minutes old
-            if($diff > 300) {
+            // No valid reason for it to be > 10 seconds old
+            if($diff > 10) {
                 $this->deleteLockFile();
             }
         }

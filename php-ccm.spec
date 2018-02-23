@@ -1,4 +1,4 @@
-%define pkgversion 0.0.2
+%define pkgversion 0.0.3
 # Increment below by one when tweaking the spec file but the version has not
 #  changed and the security patch release has not changed
 %define pkgtweakv 1
@@ -18,7 +18,7 @@
 %define basedir %{_datadir}/ccm
 %define _defaultdocdir %{basedir}/doc
 
-Name:		php-ccm-promises
+Name:		php-ccm
 Version:	%{pkgversion}
 Release:	%{pkgsecurityv}.ccm.%{pkgtweakv}%{?pkgoptother}
 BuildArch:	noarch
@@ -34,15 +34,18 @@ Source20:	CCM-%{version}.sha256
 
 #BuildRequires:	
 Requires:	php(language) >= 5.3.0
-Requires:	php-ccm-filesystem = %{version}-%{release}
+Requires: php-pecl(json)
 
+Provides: php-ccm-promises
+Provides: php-ccm-filesystem
 Provides:	CCM-promise(autoload1) = 1.0.0
 Provides:	CCM-mmpromise(autoload1) = 1.0
+Provides:	CCM-promise(packagedatabase1) = 1.0.0
+Provides:	CCM-mmpromise(packagedatabase1) = 1.0
 
 %description
-This package provides promise classes needed for the PHP-CCM ecosystem.
-This is a package in development, the PHP-CCM ecosystem is not ready
-for deployment.
+This package provides the base PHP CCM file system structure and the
+abstract classes needed for the PHP CCM management utilities.
 
 %package -n php-ccm-autoloader
 Group:		php/libraries
@@ -54,13 +57,20 @@ Requires:	CCM-mmpromise(autoload1) = 1.0
 %description -n php-ccm-autoloader
 This package provides the default php-ccm class autoloader.
 
-%package -n php-ccm-filesystem
-Group:		php/libraries
-Summary:	The filesystem for PHP-CCM
+%package -n php-ccm-jsondb
+Group:    php/utilities
+Summary:  Scripts for managing the JSON database of installed packages
 
-%description -n php-ccm-filesystem
-This package provides the directory structure for the PHP Composer
-Class Manager.
+Provides:	CCM-mmkeptpromise(packagedatabase1) = 1.0
+Requires:	CCM-mmpromise(packagedatabase1) = 1.0
+
+%description -n php-ccm-jsondb
+This package provides the shell scripts used by the operating system package
+manager to maintain the JSON database of what versions of what packages have
+been installed.
+
+A future version of this package will include a utility for querying whether
+or not updates are available.
 
 %prep
 ( cd %_sourcedir; sha256sum -c %{SOURCE20} )
@@ -74,32 +84,35 @@ done
 
 %install
 # the directory structure
-mkdir -p %{buildroot}%{basedir}/{bin,doc,jsondb,pear}
+mkdir -p %{buildroot}%{basedir}/{bin,doc,jsondb}
 mkdir -p %{buildroot}%{basedir}/local/{libraries,applications}
 mkdir -p %{buildroot}%{basedir}/stable/{libraries,applications}
 mkdir -p %{buildroot}%{basedir}/devel/{libraries,applications}
 mkdir -p %{buildroot}%{basedir}/custom/{libraries,applications}
+touch %{buildroot}%{basedir}/jsondb/local.dblock
+touch %{buildroot}%{basedir}/jsondb/stable.dblock
+touch %{buildroot}%{basedir}/jsondb/devel.dblock
+touch %{buildroot}%{basedir}/jsondb/local.json
+touch %{buildroot}%{basedir}/jsondb/stable.json
+touch %{buildroot}%{basedir}/jsondb/devel.json
 
 mkdir -p %{buildroot}%{basedir}/stable/libraries/ccm/promises
-mv promises/* %{buildroot}%{basedir}/stable/libraries/ccm/promises/
+
+install -m644 promises/AutoloadPromise.php %{buildroot}%{basedir}/stable/libraries/ccm/promises/
+install -m644 promises/PackageDatabasePromise.php %{buildroot}%{basedir}/stable/libraries/ccm/promises/
+
 install -m644 example/ClassLoader.php %{buildroot}%{basedir}/
+install -m755 bin/addComposerPackage.php ${buildroot}%{basedir}/bin/addComposerPackage
+install -m755 bin/delComposerPackage.php %{buildroot}%{basedir}/bin/delComposerPackage
 
 
 %files
 %defattr(-,root,root,-)
 %license LICENSE.md
-%doc README.md LICENSE.md composer.json docs/PromiseAPI.md docs/AutoloadPromise-*
-%{basedir}/stable/libraries/ccm
-
-%files -n php-ccm-filesystem
-%defattr(-,root,root,-)
-%license LICENSE.md
-%doc LICENSE.md
+%doc README.md LICENSE.md composer.json docs/PromiseAPI.md docs/AutoloadPromise-* docs/PackageDatabasePromise-*
 %dir %{basedir}
 %dir %{basedir}/bin
 %dir %{basedir}/doc
-%dir %{basedir}/jsondb
-%dir %{basedir}/pear
 %dir %{basedir}/local
 %dir %{basedir}/local/libraries
 %dir %{basedir}/local/applications
@@ -112,6 +125,9 @@ install -m644 example/ClassLoader.php %{buildroot}%{basedir}/
 %dir %{basedir}/custom
 %dir %{basedir}/custom/libraries
 %dir %{basedir}/custom/applications
+%dir %{basedir}/stable/libraries/ccm
+%{basedir}/stable/libraries/ccm/promises
+
 
 %files -n php-ccm-autoloader
 %defattr(-,root,root,-)
@@ -120,8 +136,23 @@ install -m644 example/ClassLoader.php %{buildroot}%{basedir}/
 %{basedir}/ClassLoader.php
 
 
+%files -n php-ccm-jsondb
+%defattr(-,root,root,-)
+%license LICENSE.md
+%doc LICENSE.md docs/jsonDatabaseScripts.md
+%attr(0755,root,root) %{basedir}/bin/addComposerPackage
+%attr(0755,root,root) %{basedir}/bin/delComposerPackage
+%dir %{basedir}/jsondb
+%ghost %{basedir}/jsondb/*.dblock
+%ghost %{basedir}/jsondv/*.json
+
+
 
 %changelog
+* Thu Feb 22 2018 Alice Wonder <buildmaster@librelamp.com> - 0.0.3-0.ccm.1
+- add jsondb promise, utility scripts (new subpackage)
+- combine promises and filesystem into one package
+
 * Tue Feb 20 2018 Alice Wonder <buildmaster@librelamp.com> - 0.0.2-0.ccm.1
 - update for further testing, added filesystem sub-package
 
