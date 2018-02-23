@@ -30,7 +30,9 @@ A macro should define the full path to the script, e.g.
 Then in the `%post` section of the spec file:
 
     %post
-    %{ccmaddpkg} %{branch} %{pkgvendor} %{pkgname} %{pkgversion} %{pkgsecurityv} %{pkgtweakv}
+    %{ccmaddpkg} %{branch} %{pkgvendor} %{pkgname} %{pkgversion} %{pkgsecurityv} %{pkgtweakv} || :
+
+The `|| :` prevents issues with RPM if the script fails with a bad exit status.
 
 Please see the [RPM Spec File Standard](https://github.com/AliceWonderMiscreations/php-ccm/blob/master/RPM_SPEC.md)
 for more information on RPM packaging of CCM libraries.
@@ -56,7 +58,7 @@ Then in the `%postun` section of the spec file:
 
     %postun
     if [ "$1" -ge 1 ]; then
-        %{ccmdelpkg} %{branch} %{pkgvendor} %{pkgname}
+        %{ccmdelpkg} %{branch} %{pkgvendor} %{pkgname} || :
     fi
 
 In the condition `if then` clause, the argument `$1` is how many packages of
