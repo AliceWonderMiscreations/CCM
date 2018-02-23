@@ -21,7 +21,7 @@ if($count !== 7) {
 }
 
 $branch = trim(strtolower($argv[1]));
-if(! in_array($branch, array('local', 'stable', 'devel')) {
+if(! in_array($branch, array('local', 'stable', 'devel'))) {
     echo "Branch must be one of: local, stable, or devel\n";
     exit(1);
 }

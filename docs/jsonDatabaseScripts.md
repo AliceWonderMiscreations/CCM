@@ -57,7 +57,7 @@ A macro should define the full path to the script, e.g.
 Then in the `%postun` section of the spec file:
 
     %postun
-    if [ "$1" -ge 1 ]; then
+    if [ "$1" -eq 0 ]; then
         %{ccmdelpkg} %{branch} %{pkgvendor} %{pkgname} || :
     fi
 
