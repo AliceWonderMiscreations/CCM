@@ -18,51 +18,51 @@
 %define basedir %{_datadir}/ccm
 %define _defaultdocdir %{basedir}/doc
 
-Name:		php-ccm
-Version:	%{pkgversion}
-Release:	%{pkgsecurityv}.ccm.%{pkgtweakv}%{?pkgoptother}
-BuildArch:	noarch
-Summary:	PHP Utility Classes for the CCM Project
+Name:           php-ccm
+Version:        %{pkgversion}
+Release:        %{pkgsecurityv}.ccm.%{pkgtweakv}%{?pkgoptother}
+BuildArch:      noarch
+Summary:        PHP Utility Classes for the CCM Project
 
-Group:		php/libraries
-License:	MIT
-URL:		https://github.com/AliceWonderMiscreations/CCM
-Source0:	CCM-%{version}.tar.gz
+Group:          php/libraries
+License:        MIT
+URL:            https://github.com/AliceWonderMiscreations/CCM
+Source0:        CCM-%{version}.tar.gz
 
 #checksums
-Source20:	CCM-%{version}.sha256
+Source20:       CCM-%{version}.sha256
 
 #BuildRequires:	
-Requires:	php(language) >= 5.3.0
-Requires: php-pecl(json)
+Requires:       php(language) >= 5.3.0
+Requires:       php-pecl(json)
 
-Provides: php-ccm-promises
-Provides: php-ccm-filesystem
-Provides:	CCM-promise(autoload1) = 1.0.0
-Provides:	CCM-mmpromise(autoload1) = 1.0
-Provides:	CCM-promise(packagedatabase1) = 1.0.0
-Provides:	CCM-mmpromise(packagedatabase1) = 1.0
+Provides:       php-ccm-promises
+Provides:       php-ccm-filesystem
+Provides:       CCM-promise(autoload1) = 1.0.0
+Provides:       CCM-mmpromise(autoload1) = 1.0
+Provides:       CCM-promise(packagedatabase1) = 1.0.0
+Provides:       CCM-mmpromise(packagedatabase1) = 1.0
 
 %description
 This package provides the base PHP CCM file system structure and the
 abstract classes needed for the PHP CCM management utilities.
 
 %package -n php-ccm-autoloader
-Group:		php/libraries
-Summary:	The default PHP-CCM class autoloader
+Group:          php/libraries
+Summary:        The default PHP-CCM class autoloader
 
-Provides:	CCM-mmkeptpromise(autoload1) = 1.0
-Requires:	CCM-mmpromise(autoload1) = 1.0
+Provides:       CCM-mmkeptpromise(autoload1) = 1.0
+Requires:       CCM-mmpromise(autoload1) = 1.0
 
 %description -n php-ccm-autoloader
 This package provides the default php-ccm class autoloader.
 
 %package -n php-ccm-jsondb
-Group:    php/utilities
-Summary:  Scripts for managing the JSON database of installed packages
+Group:          php/utilities
+Summary:        Scripts for managing the JSON database of installed packages
 
-Provides:	CCM-mmkeptpromise(packagedatabase1) = 1.0
-Requires:	CCM-mmpromise(packagedatabase1) = 1.0
+Provides:       CCM-mmkeptpromise(packagedatabase1) = 1.0
+Requires:       CCM-mmpromise(packagedatabase1) = 1.0
 
 %description -n php-ccm-jsondb
 This package provides the shell scripts used by the operating system package
