@@ -109,7 +109,7 @@ install -m755 bin/delComposerPackage.php %{buildroot}%{basedir}/bin/delComposerP
 %files
 %defattr(-,root,root,-)
 %license LICENSE.md
-%doc README.md LICENSE.md composer.json docs/PromiseAPI.md docs/AutoloadPromise-* docs/PackageDatabasePromise-*
+%doc README.md LICENSE.md composer.json docs/CLI_PHP.md docs/PromiseAPI.md docs/AutoloadPromise-* docs/PackageDatabasePromise-*
 %dir %{basedir}
 %dir %{basedir}/bin
 %dir %{basedir}/doc
